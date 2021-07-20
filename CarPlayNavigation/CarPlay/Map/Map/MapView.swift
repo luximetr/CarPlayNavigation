@@ -100,10 +100,13 @@ class MapView: UIView, MKMapViewDelegate {
     
     let directions = MKDirections(request: request)
     directions.calculate(completionHandler: { [weak self] response, error in
-      guard let mapRoute = response?.routes.first else {
-        return
+      guard
+        let mapRoute = response?.routes.first,
+        let strongSelf = self else {
+          return
       }
-      self?.mapView.addOverlay(mapRoute.polyline)
+      strongSelf.mapView.removeOverlays(strongSelf.mapView.overlays)
+      strongSelf.mapView.addOverlay(mapRoute.polyline)
     })
   }
   
